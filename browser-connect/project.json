@@ -1,0 +1,42 @@
+{
+  "name": "browser-connect",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "connect/browser-connect/src",
+  "projectType": "library",
+  "release": {
+    "version": {
+      "generatorOptions": {
+        "packageRoot": "dist\\{projectRoot}",
+        "currentVersionResolver": "git-tag"
+      }
+    }
+  },
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/connect/browser-connect",
+        "main": "connect/browser-connect/src/index.ts",
+        "tsConfig": "connect/browser-connect/tsconfig.lib.json",
+        "assets": ["connect/browser-connect/*.md"]
+      }
+    },
+    "nx-release-publish": {
+      "options": {
+        "packageRoot": "dist\\{projectRoot}"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "connect/browser-connect/jest.config.ts"
+      }
+    }
+  }
+}

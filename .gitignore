@@ -1,0 +1,12 @@
+# compiled output
+__pycache__
+*.egg-info/
+dist
+python-connect/build
+
+# dependencies
+node_modules
+venv
+python-connect/Lib
+python-connect/Scripts
+pyvenv.cfg
