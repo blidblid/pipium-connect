@@ -11,7 +11,7 @@
       }
     }
   },
-  "tags": [],
+  "tags": ["scope:connect"],
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",

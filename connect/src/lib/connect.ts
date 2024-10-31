@@ -1,4 +1,3 @@
-import { isPromise, omitObjectProperties } from '@pipium/core';
 import {
   ConnectionBody,
   ConnectionCompleteBody,
@@ -9,6 +8,7 @@ import {
   ConnectionStartBody,
 } from '@pipium/model';
 import { ConnectAdapter, ConnectSocket } from './connect-model';
+import { is_promise, omit_object_properties } from './connect-util';
 import { Connection, RunInput, RunPreviousValue, RunValue } from './run-model';
 
 export async function connect(
@@ -22,7 +22,7 @@ export async function connect(
       models: Object.entries(connections).map(([id, connection]) => {
         return {
           id,
-          ...omitObjectProperties(connection, ['run_sync', 'run_async']),
+          ...omit_object_properties(connection, ['run_sync', 'run_async']),
         };
       }),
     };
@@ -134,7 +134,7 @@ export async function connect(
 
       try {
         const result = run_sync(input);
-        const output = isPromise(result) ? await result : result;
+        const output = is_promise(result) ? await result : result;
         const values = Array.isArray(output) ? output : [output];
 
         for (const value of values) {

@@ -1,4 +1,3 @@
-import { PRODUCTION_ENVIRONMENT } from '@pipium/core';
 import { io, Socket } from 'socket.io-client';
 import {
   ConnectAdapter,
@@ -48,7 +47,8 @@ export class SioSocket implements ConnectSocket {
     const authentication_query = await this.adapter.get_authentication_query();
 
     this.socket = this.create_socket(
-      this.connect_options.server_url ?? PRODUCTION_ENVIRONMENT.server.url,
+      this.connect_options.server_url ??
+        'https://server-production-00001-pq8-vauf4uyfmq-ey.a.run.app',
       authentication_query,
     );
 
