@@ -1,8 +1,29 @@
-# pipium_connect
+# Pipium Python connect
 
-This is the Python client of Pipium.
+This is the package that connects Python models with the [Pipium](https://pipium.com) platform.
 
-## Install
+## Installation
 
-- Create a virtual environment `python -m venv .`
-- Install the dependencies `pip install -r ./requirements.txt`
+```bash
+pip install pipium-connect
+```
+
+## Code
+
+```python
+from pipium_connect import connect
+
+connect(
+    "your-securely-stored-api-key",
+    {
+      "hello_world": {
+          "name": "Hello world!",
+          "run_sync": lambda input: "Hello " + input["text"],
+          "types": {
+              "inputs": ["text/plain"],
+              "output": "text/plain",
+          },
+      },
+    }
+)
+```

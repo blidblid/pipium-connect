@@ -1,11 +1,5 @@
-# model
+# Pipium models
 
-This library was generated with [Nx](https://nx.dev).
+This package contains all the models used by the [Pipium](https://pipium.com) platform.
 
-## Building
-
-Run `nx build model` to build the library.
-
-## Running unit tests
-
-Run `nx test model` to execute the unit tests via [Jest](https://jestjs.io).
+The models are implemented using [zod](https://github.com/colinhacks/zod). They validate all data that is sent to the Pipium platform.

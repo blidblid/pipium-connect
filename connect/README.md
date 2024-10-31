@@ -1,11 +1,3 @@
-# connect
+# Pipium connect
 
-This library was generated with [Nx](https://nx.dev).
-
-## Building
-
-Run `nx build connect` to build the library.
-
-## Running unit tests
-
-Run `nx test connect` to execute the unit tests via [Jest](https://jestjs.io).
+This library contains the core functionality for the Node.js and the browser clients that connect models with the [Pipium](https://pipium.com) platform.

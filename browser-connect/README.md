@@ -1,11 +1,5 @@
-# browser-connect
+# Pipium browser client
 
-This library was generated with [Nx](https://nx.dev).
+This is the package that connects browser based models with the [Pipium](https://pipium.com) platform.
 
-## Building
-
-Run `nx build browser-connect` to build the library.
-
-## Running unit tests
-
-Run `nx test browser-connect` to execute the unit tests via [Jest](https://jestjs.io).
+It is currently not available on npm, but you can open an issue if you want to use it.
