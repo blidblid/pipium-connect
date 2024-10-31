@@ -3,7 +3,7 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "connect/model/src",
   "projectType": "library",
-  "tags": [],
+  "tags": ["scope:connect"],
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",
