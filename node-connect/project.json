@@ -21,6 +21,7 @@
         "outputPath": "dist/connect/node-connect",
         "thirdParty": true,
         "bundle": true,
+        "declaration": true,
         "format": ["esm", "cjs"],
         "tsConfig": "connect/node-connect/tsconfig.lib.json",
         "packageJson": "connect/node-connect/package.json",

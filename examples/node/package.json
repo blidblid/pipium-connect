@@ -1,0 +1,9 @@
+{
+  "private": true,
+  "scripts": {
+    "start": "npx esrun --watch node-crud-example.ts"
+  },
+  "dependencies": {
+    "@pipium/node-connect": "*"
+  }
+}

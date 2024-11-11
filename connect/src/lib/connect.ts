@@ -39,7 +39,30 @@ export async function connect(
       ),
     };
 
+    const emit_error = (message: string) => {
+      const payload: ConnectionErrorBody = {
+        id: input.id,
+        user_id: input.user_id,
+        pipe_id: input.pipe_id,
+        layer_id: input.layer_id,
+        model_id: input.model_id,
+        result_id: input.result_id,
+        message: create_error_message(message),
+      };
+
+      adapter.log('Emitting error');
+      socket.emit('pp-error', payload);
+    };
+
     const model = connections[input.connection_model_id];
+
+    if (!model) {
+      const error = `Model ${input.model_id} not found`;
+      adapter.log(error);
+      emit_error(error);
+      return;
+    }
+
     const run_async = model.run_async;
     const run_sync = model.run_sync;
 
@@ -71,21 +94,6 @@ export async function connect(
 
       adapter.log('Emitting result');
       socket.emit('pp-result', payload);
-    };
-
-    const emit_error = (message: string) => {
-      const payload: ConnectionErrorBody = {
-        id: input.id,
-        user_id: input.user_id,
-        pipe_id: input.pipe_id,
-        layer_id: input.layer_id,
-        model_id: input.model_id,
-        result_id: input.result_id,
-        message: create_error_message(message),
-      };
-
-      adapter.log('Emitting error');
-      socket.emit('pp-error', payload);
     };
 
     const emit_complete = () => {
@@ -144,6 +152,11 @@ export async function connect(
         emit_complete();
       } catch (error: unknown) {
         on_error(error);
+
+        if (error instanceof Error && error.stack) {
+          adapter.log(error.stack);
+        }
+
         return;
       }
     }
@@ -157,6 +170,7 @@ export async function connect(
             next: emit_result,
             error: (error) => {
               emit_error(error);
+
               resolve();
             },
             complete: () => {
@@ -167,6 +181,11 @@ export async function connect(
         });
       } catch (error: unknown) {
         on_error(error);
+
+        if (error instanceof Error && error.stack) {
+          adapter.log(error.stack);
+        }
+
         return;
       }
     }

@@ -1,10 +1,14 @@
 import { JSONSchema7 } from 'json-schema';
 
-export type Schema = JSONSchema7 & {
+export type Schema = Omit<JSONSchema7, 'allOf'> & {
   properties?: Record<string, Schema>;
   items?: Schema;
   enum?: string[];
   required?: string[];
+  allOf?: Schema[];
+  if?: Schema;
+  else?: Schema;
+  then?: Schema;
 };
 
 export type SchemaValue =

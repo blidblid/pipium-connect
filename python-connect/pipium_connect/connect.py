@@ -3,6 +3,8 @@ from pipium_connect.run_connection_model import Connections
 import requests
 import socketio
 import sys
+import traceback
+
 
 sio = socketio.Client()
 
@@ -47,10 +49,29 @@ def connect(
         id = input["id"]
         user_id = input["user_id"]
         pipe_id = input["pipe_id"]
-        model_id = input["model_id"]
         layer_id = input["layer_id"]
+        model_id = input["model_id"]
         result_id = input["result_id"]
+
+        def emit_error(message: str):
+            payload = {
+                "id": id,
+                "user_id": user_id,
+                "pipe_id": pipe_id,
+                "layer_id": layer_id,
+                "model_id": model_id,
+                "result_id": result_id,
+                "message": create_error_message(message),
+            }
+            log("Emitting error")
+            sio.emit("pp-error", payload)
+
         model = connections.get(input["connection_model_id"])
+
+        if not model:
+            error = f"Model {model_id} not found"
+            log(error)
+            emit_error(error)
 
         def emit_start():
             start = {
@@ -77,19 +98,6 @@ def connect(
             }
             log("Emitting result")
             sio.emit("pp-result", payload)
-
-        def emit_error(message: str):
-            payload = {
-                "id": id,
-                "user_id": user_id,
-                "pipe_id": pipe_id,
-                "layer_id": layer_id,
-                "model_id": model_id,
-                "result_id": result_id,
-                "message": create_error_message(message),
-            }
-            log("Emitting error")
-            sio.emit("pp-error", payload)
 
         def emit_complete():
             payload = {
@@ -136,6 +144,7 @@ def connect(
                 emit_complete()
             except Exception as error:
                 on_error(error)
+                traceback.print_exc()
                 return
 
         if "run_async" in model:
@@ -151,6 +160,7 @@ def connect(
                 )
             except Exception as error:
                 on_error(error)
+                traceback.print_exc()
                 return
 
     @sio.on("pp-log")

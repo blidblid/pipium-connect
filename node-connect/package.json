@@ -1,10 +1,17 @@
 {
   "name": "@pipium/node-connect",
-  "version": "0.0.1-alpha.5",
+  "version": "0.0.1-alpha.8",
   "main": "index.cjs",
   "type": "module",
+  "types": "./src/index.d.ts",
   "exports": {
-    "import": "./index.js",
-    "require": "./index.cjs"
+    "import": {
+      "default": "./index.js",
+      "types": "./src/index.d.ts"
+    },
+    "require": {
+      "default": "./index.cjs",
+      "types": "./src/index.d.ts"
+    }
   }
 }

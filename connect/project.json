@@ -17,6 +17,7 @@
       "executor": "@nx/js:tsc",
       "outputs": ["{options.outputPath}"],
       "options": {
+        "declaration": true,
         "outputPath": "dist/connect/connect",
         "main": "connect/connect/src/index.ts",
         "tsConfig": "connect/connect/tsconfig.lib.json",
