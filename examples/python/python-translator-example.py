@@ -46,7 +46,7 @@ def google_speech_to_text(input):
     if "error" in json_data:
         raise ValueError(json_data["error"]["message"])
 
-    if not isinstance(json_data.get("results"), list) or len(json_data["results"]) == 0:
+    if "results" not in json_data or len(json_data["results"]) == 0:
         return "Inaudible or no speech detected."
 
     # Concatenate transcripts
