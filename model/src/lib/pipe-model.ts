@@ -44,6 +44,7 @@ export const PIPE_SCHEMA = PIPE_BODY_SCHEMA.extend({
 export const PIPE_RUN_QUERY_SCHEMA = z.object({
   resultId: RESULT_ID_SCHEMA.optional(),
   inputWidgetId: INPUT_WIDGET_ID_SCHEMA.optional(),
+  description: z.string().optional().describe('Input description.'),
 });
 
 export const PIPE_RUN_RESPONSE_SCHEMA = z.object({
