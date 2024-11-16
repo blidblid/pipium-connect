@@ -128,9 +128,7 @@ const connections: Record<string, Connection> = {
   },
 };
 
-connect(pipium_api_key, connections, {
-  server_url: 'http://localhost:3000',
-});
+connect(pipium_api_key, connections);
 
 function arrayBufferToBase64(arrayBuffer: ArrayBuffer): string {
   const uint8Array = new Uint8Array(arrayBuffer);

@@ -86,7 +86,4 @@ connections: Connections = {
 connect(
     pipium_api_key,
     connections,
-    {
-        "server_url": "http://localhost:3000",
-    },
 )

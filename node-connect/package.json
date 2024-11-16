@@ -1,6 +1,7 @@
 {
   "name": "@pipium/node-connect",
-  "version": "0.0.1",
+  "version": "0.0.2",
+  "description": "Pipium Node.js client that connects your code to the Pipium platform.",
   "main": "index.cjs",
   "type": "module",
   "types": "./src/index.d.ts",

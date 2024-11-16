@@ -65,9 +65,7 @@ const connections: Record<string, Connection> = {
   },
 };
 
-connect(pipium_api_key, connections, {
-  server_url: 'http://localhost:3000',
-});
+connect(pipium_api_key, connections);
 
 const state = {};
 let id_counter = 0;
