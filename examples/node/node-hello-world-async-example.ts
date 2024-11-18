@@ -11,7 +11,10 @@ if (!pipium_api_key) {
 
 connect(pipium_api_key, {
   hello_world: {
-    run_sync: ({ text }) => `Hello ${text}`,
+    run_async: async (input, observer) => {
+      observer.next(`Hello ${input.text}`);
+      observer.complete();
+    },
     name: 'Hello, World!',
     types: {
       inputs: ['text/plain'],
