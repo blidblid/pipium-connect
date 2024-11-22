@@ -19,9 +19,6 @@ export const MODEL_ACCESS_SCHEMA = z
 
 export const MODEL_SOURCE_SCHEMA = z.enum(['browser', 'user']);
 export const MODEL_NAME_SCHEMA = z.string().describe('Model name.');
-export const MODEL_DESCRIPTION_SCHEMA = z
-  .string()
-  .describe('Model description.');
 export const MODEL_SCHEMA_SCHEMA = z
   .any()
   .describe('JSON schema that validates config and generates a form.');
@@ -32,10 +29,13 @@ export const MODEL_INVITED_USER_IDS_SCHEMA = z
 
 export const MODEL_TYPES_INPUTS_SCHEMA = z
   .array(MIME_TYPE_SCHEMA)
-  .describe('Input MIME types.');
+  .describe(
+    'Input MIME types. These are the types this model accepts as input.',
+  );
 
-export const MODEL_TYPES_OUTPUT_SCHEMA =
-  MIME_TYPE_SCHEMA.describe('Output MIME type.');
+export const MODEL_TYPES_OUTPUT_SCHEMA = MIME_TYPE_SCHEMA.describe(
+  'Input MIME types. This is the type this model produces as output.',
+);
 
 export const MODEL_TYPES_SCHEMA = z.object({
   inputs: MODEL_TYPES_INPUTS_SCHEMA,
@@ -77,7 +77,6 @@ export const MODEL_BODY_SCHEMA = z.object({
   access: MODEL_ACCESS_SCHEMA.optional(),
   rateLimit: MODEL_RATE_LIMIT_SCHEMA.optional(),
   schema: MODEL_SCHEMA_SCHEMA.optional(),
-  description: z.string().optional(),
   widgets: WIDGETS_SCHEMA.optional(),
   widgetConfig: MODEL_WIDGET_CONFIG_SCHEMA.optional(),
 });
@@ -87,7 +86,6 @@ export const MODEL_SCHEMA = MODEL_BODY_SCHEMA.extend({
   date: z.date().describe('Creation date.'),
 }).required({
   access: true,
-  description: true,
   invitedUserIds: true,
   widgets: true,
 });

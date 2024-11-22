@@ -9,17 +9,20 @@ import {
 } from '@pipium/model';
 import { ConnectAdapter, ConnectSocket } from './connect-model';
 import { is_promise, omit_object_properties } from './connect-util';
-import { Connection, RunInput, RunPreviousValue, RunValue } from './run-model';
+import { Input } from './input-model';
+import { Model } from './model-model';
+import { Output } from './output-model';
+import { PreviousValue } from './previous-value-model';
 
 export async function connect(
   adapter: ConnectAdapter,
   socket: ConnectSocket,
-  connections: Record<string, Connection>,
+  models: Record<string, Model>,
 ) {
   socket.on('pp-connect', () => {
     const payload: ConnectionBody = {
       source: adapter.source,
-      models: Object.entries(connections).map(([id, connection]) => {
+      models: Object.entries(models).map(([id, connection]) => {
         return {
           id,
           ...omit_object_properties(connection, ['run_sync', 'run_async']),
@@ -31,7 +34,7 @@ export async function connect(
   });
 
   socket.on('pp-run', async (connection_input: ConnectionInput) => {
-    const input: RunInput = {
+    const input: Input = {
       ...connection_input,
       text: try_string_decode(connection_input.binary),
       previous_values: connection_input.previous_values.map(
@@ -54,7 +57,7 @@ export async function connect(
       socket.emit('pp-error', payload);
     };
 
-    const model = connections[input.connection_model_id];
+    const model = models[input.local_model_id];
 
     if (!model) {
       const error = `Model ${input.model_id} not found`;
@@ -80,7 +83,7 @@ export async function connect(
       socket.emit('pp-start', start);
     };
 
-    const emit_result = (value: RunValue) => {
+    const emit_result = (value: Output) => {
       const payload: ConnectionResultBody = {
         value,
         id: input.id,
@@ -195,8 +198,12 @@ export async function connect(
     adapter.log(message);
   });
 
-  socket.on('pp-log-error', (message: string) => {
-    adapter.log(message);
+  socket.on('pp-log-error', (error: unknown) => {
+    try {
+      adapter.log(JSON.stringify(error, null, 2));
+    } catch {
+      adapter.log(`${error}`);
+    }
   });
 
   socket.on('exception', (error: unknown) => {
@@ -220,12 +227,16 @@ function try_string_decode(value: Uint8Array | ArrayBuffer) {
 
 function connection_previous_value_to_run_previous_value(
   previous_value: ConnectionPreviousValue,
-): RunPreviousValue {
+): PreviousValue {
   return {
     ...previous_value,
     binary: async () => {
       const response = await fetch(previous_value.uri);
       return response.arrayBuffer();
+    },
+    json: async () => {
+      const response = await fetch(previous_value.uri);
+      return response.json();
     },
     text: async () => {
       const response = await fetch(previous_value.uri);

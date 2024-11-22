@@ -1,10 +1,10 @@
 export type {
   ConnectSocketOptions,
-  Connection,
-  RunInput,
-  RunObserver,
-  RunPreviousValue,
-  RunValue,
+  Input,
+  Model,
+  Observer,
+  Output,
+  PreviousValue,
 } from '@pipium/connect';
 
 export * from './lib';

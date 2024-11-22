@@ -1,5 +1,10 @@
-from pipium_connect.connect_model import ConnectOptions
-from pipium_connect.run_connection_model import Connections
+from pipium_connect.connect_options_model import ConnectOptions
+from pipium_connect.input_model import Input
+from pipium_connect.model_model import Models
+from pipium_connect.observer_model import Observer
+from pipium_connect.output_model import Output
+from pipium_connect.previous_value_model import PreviousValue
+from typing import Dict
 import requests
 import socketio
 import sys
@@ -11,7 +16,7 @@ sio = socketio.Client()
 
 def connect(
     api_key: str,
-    connections: Connections,
+    models: Models,
     options: ConnectOptions = ConnectOptions(),
 ):
     server_url = get_server_url(options)
@@ -30,9 +35,9 @@ def connect(
             "models": [
                 {
                     "id": id,
-                    **omit_properties(connection, ["run_sync", "run_async"]),
+                    **recursively_remove_none_from_dict(model.asdict()),
                 }
-                for id, connection in connections.items()
+                for id, model in models.items()
             ],
         }
 
@@ -44,14 +49,14 @@ def connect(
 
     @sio.on("pp-run")
     def handle_run(connection_input: dict):
-        input = connection_input_to_run_input(connection_input)
+        input = connection_input_to_input(connection_input)
 
-        id = input["id"]
-        user_id = input["user_id"]
-        pipe_id = input["pipe_id"]
-        layer_id = input["layer_id"]
-        model_id = input["model_id"]
-        result_id = input["result_id"]
+        id = input.id
+        user_id = input.user_id
+        pipe_id = input.pipe_id
+        layer_id = input.layer_id
+        model_id = input.model_id
+        result_id = input.result_id
 
         def emit_error(message: str):
             payload = {
@@ -66,7 +71,7 @@ def connect(
             log("Emitting error")
             sio.emit("pp-error", payload)
 
-        model = connections.get(input["connection_model_id"])
+        model = models.get(input.local_model_id)
 
         if not model:
             error = f"Model {model_id} not found"
@@ -85,7 +90,7 @@ def connect(
             log("Emitting start")
             sio.emit("pp-start", start)
 
-        def emit_result(value: dict):
+        def emit_result(value: Output):
             payload = {
                 "value": value,
                 "id": id,
@@ -94,7 +99,7 @@ def connect(
                 "layer_id": layer_id,
                 "model_id": model_id,
                 "result_id": result_id,
-                "mime_type": model["types"]["output"],
+                "mime_type": model.types.output,
             }
             log("Emitting result")
             sio.emit("pp-result", payload)
@@ -120,24 +125,22 @@ def connect(
             return f'The model threw an error "{native_error_message}"'
 
         def on_error(error: Exception):
-            native_error_message = (
-                str(error) if isinstance(error, Exception) else "Unknown error"
-            )
+            native_error_message = get_error_message(error)
             error_message = create_error_message(native_error_message)
             log(error_message)
             emit_error(native_error_message)
 
-        if "run_sync" not in model and "run_async" not in model:
+        if not model.run_sync and not model.run_async:
             log("No run function found")
             emit_complete()
             return
 
         emit_start()
 
-        if "run_sync" in model:
+        if model.run_sync:
             log("Starting sync run")
             try:
-                output = model["run_sync"](input)
+                output = model.run_sync(input)
                 values = output if isinstance(output, list) else [output]
                 for value in values:
                     emit_result(value)
@@ -147,16 +150,16 @@ def connect(
                 traceback.print_exc()
                 return
 
-        if "run_async" in model:
+        if model.run_async:
             log("Starting async run")
             try:
-                model["run_async"](
+                model.run_async(
                     input,
-                    {
-                        "next": emit_result,
-                        "error": emit_error,
-                        "complete": emit_complete,
-                    },
+                    Observer(
+                        next=emit_result,
+                        error=on_error,
+                        complete=emit_complete,
+                    ),
                 )
             except Exception as error:
                 on_error(error)
@@ -183,22 +186,31 @@ def log(message: str):
     sys.stdout.flush()
 
 
-def connection_input_to_run_input(
+def get_error_message(error) -> str:
+    if isinstance(error, Exception) or isinstance(error, str):
+        return str(error)
+
+    return "Unknown error"
+
+
+def connection_input_to_input(
     connection_input: dict,
 ):
-    return {
+    previous_values = connection_input.pop("previous_values")
+
+    return Input(
         **connection_input,
-        "text": try_string_decode(connection_input["binary"]),
-        "previous_values": [
-            connection_previous_value_to_run_previous_value(previous_value)
-            for previous_value in connection_input["previous_values"]
+        text=try_string_decode(connection_input["binary"]),
+        previous_values=[
+            connection_previous_value_to_previous_value(previous_value)
+            for previous_value in previous_values
         ],
-    }
+    )
 
 
 def get_server_url(options: ConnectOptions):
-    if "server_url" in options:
-        return options["server_url"]
+    if hasattr(options, "server_url"):
+        return options.server_url
 
     return "https://server-production-00001-pq8-vauf4uyfmq-ey.a.run.app"
 
@@ -210,21 +222,34 @@ def try_string_decode(binary):
         return ""
 
 
-def omit_properties(obj, keys):
-    return {k: v for k, v in obj.items() if k not in keys}
+def connection_previous_value_to_previous_value(connection_previous_value: dict):
+    return PreviousValue(
+        **connection_previous_value,
+        binary=lambda: fetch_binary(connection_previous_value["uri"]),
+        json=lambda: fetch_json(connection_previous_value["uri"]),
+        text=lambda: fetch_text(connection_previous_value["uri"]),
+    )
 
 
-def connection_previous_value_to_run_previous_value(previous_value):
+def recursively_remove_none_from_dict(dictionary):
+    if not isinstance(dictionary, Dict):
+        return dictionary
+
     return {
-        **previous_value,
-        "binary": lambda: fetch_binary(previous_value["uri"]),
-        "text": lambda: fetch_text(previous_value["uri"]),
+        key: recursively_remove_none_from_dict(value)
+        for key, value in dictionary.items()
+        if value is not None
     }
 
 
 def fetch_binary(uri):
     response = requests.get(uri)
     return response.content
+
+
+def fetch_json(uri):
+    response = requests.get(uri)
+    return response.json()
 
 
 def fetch_text(uri):

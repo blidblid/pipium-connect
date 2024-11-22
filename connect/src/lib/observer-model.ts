@@ -1,4 +1,4 @@
-import { RunValue } from './run-value-model';
+import { Output } from './output-model';
 
 /**
  * An observer contains callbacks that handle the three possible outcomes of a run:
@@ -6,8 +6,8 @@ import { RunValue } from './run-value-model';
  * - error: the run has produced an error and stopped
  * - complete: the run has completed and will not produce any more values
  */
-export interface RunObserver {
-  next: (value: RunValue) => void;
+export interface Observer {
+  next: (value: Output) => void;
   error: (message: string) => void;
   complete: () => void;
 }
