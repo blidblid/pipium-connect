@@ -5,7 +5,9 @@ from pipium_connect.observer_model import Observer
 from pipium_connect.output_model import Output
 from pipium_connect.previous_value_model import PreviousValue
 from typing import Dict
+import asyncio
 import requests
+import signal
 import socketio
 import sys
 import traceback
@@ -178,7 +180,7 @@ def connect(
     def handle_exception(message: str):
         log(message)
 
-    sio.wait()
+    asyncio.run(exit_on_disconnected())
 
 
 def log(message: str):
@@ -255,3 +257,26 @@ def fetch_json(uri):
 def fetch_text(uri):
     response = requests.get(uri)
     return response.text
+
+
+async def exit_on_disconnected():
+    # Taken from sio.wait()
+    if sio.eio.state != "connected":
+        exit()
+        return
+
+    await asyncio.sleep(1)
+    await exit_on_disconnected()
+
+
+def exit():
+    sio.disconnect()
+    sys.exit(0)
+
+
+def signal_exit_handler(_, __):
+    exit()
+
+
+for sig in [signal.SIGINT, signal.SIGTERM]:
+    signal.signal(sig, signal_exit_handler)
