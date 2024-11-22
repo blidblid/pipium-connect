@@ -7,8 +7,10 @@ python-connect/build
 # dependencies
 node_modules
 venv
-Lib
-Scripts
+python-connect/Lib
+python-connect/Scripts
+examples/python/Lib
+examples/python/Scripts
 pyvenv.cfg
 
 # privates

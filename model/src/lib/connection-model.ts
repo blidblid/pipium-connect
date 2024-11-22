@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import {
   LAYER_ID_SCHEMA,
+  LOCAL_MODEL_ID_SCHEMA,
   MODEL_ID_SCHEMA,
   PIPE_ID_SCHEMA,
   RESULT_ID_SCHEMA,
@@ -9,7 +10,6 @@ import {
 } from './common-model';
 import {
   MODEL_ACCESS_SCHEMA,
-  MODEL_DESCRIPTION_SCHEMA,
   MODEL_INVITED_USER_IDS_SCHEMA,
   MODEL_NAME_SCHEMA,
   MODEL_RATE_LIMIT_LIMIT_SCHEMA,
@@ -62,7 +62,6 @@ export const CONNECTION_MODEL_SCHEMA = z
     invited_user_ids: MODEL_INVITED_USER_IDS_SCHEMA.optional(),
     access: MODEL_ACCESS_SCHEMA.optional(),
     schema: MODEL_SCHEMA_SCHEMA.optional(),
-    description: MODEL_DESCRIPTION_SCHEMA.optional(),
     widget_config: CONNECTION_WIDGET_CONFIG_SCHEMA.optional(),
     widgets: WIDGETS_SCHEMA.optional(),
     rate_limit: CONNECTION_RATE_LIMIT_SCHEMA.optional(),
@@ -125,19 +124,19 @@ export const CONNECTION_INPUT_SCHEMA = z.object({
     .union([z.instanceof(ArrayBuffer), z.instanceof(Uint8Array)])
     .describe('Binary of the input data.'),
   mime_type: z.string().describe('MIME type of the input data.'),
-  user_id: USER_ID_SCHEMA.describe('User ID.'),
-  connection_model_id: MODEL_ID_SCHEMA.describe('Connection model ID.'),
-  pipe_id: PIPE_ID_SCHEMA.describe('Pipe ID.'),
-  model_id: MODEL_ID_SCHEMA.describe('Model ID.'),
-  result_id: RESULT_ID_SCHEMA.describe('Result ID.'),
-  layer_id: LAYER_ID_SCHEMA.describe('Layer ID.'),
+  user_id: USER_ID_SCHEMA,
+  local_model_id: LOCAL_MODEL_ID_SCHEMA,
+  pipe_id: PIPE_ID_SCHEMA,
+  model_id: MODEL_ID_SCHEMA,
+  result_id: RESULT_ID_SCHEMA,
+  layer_id: LAYER_ID_SCHEMA,
   config: z
     .any()
     .optional()
     .describe('Configuration created from model schema.'),
   previous_values: z
     .array(CONNECTION_PREVIOUS_VALUE_SCHEMA)
-    .describe('Previous values of this the current run id.'),
+    .describe('Previous values for this result_id.'),
 });
 
 export type ConnectionBody = z.infer<typeof CONNECTION_BODY_SCHEMA>;

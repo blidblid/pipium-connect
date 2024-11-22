@@ -1,4 +1,12 @@
-from pipium_connect import connect, Connections
+from pipium_connect import (
+    connect,
+    ConnectOptions,
+    FormWidgetConfig,
+    Input,
+    Model,
+    Types,
+    WidgetConfig,
+)
 import json
 import os
 from dotenv import load_dotenv
@@ -10,11 +18,11 @@ state = {}
 id_counter = 0
 
 
-def run(input):
+def run(input: Input):
     global state
     global id_counter
 
-    command = json.loads(input["text"])
+    command = json.loads(input.text)
 
     if command["action"] == "add":
         id = str(id_counter)
@@ -27,63 +35,64 @@ def run(input):
     return json.dumps(state)
 
 
-connections: Connections = {
-    "crud": {
-        "run_sync": lambda input: run(input),
-        "name": "CRUD",
-        "widget_config": {
-            "form": {
-                "schema": {
-                    "type": "object",
-                    "properties": {
-                        "action": {
-                            "title": "Action",
-                            "type": "string",
-                            "enum": ["add", "delete"],
-                        },
-                    },
-                    "allOf": [
-                        {
-                            "if": {
-                                "type": "object",
-                                "properties": {"action": {"const": "add"}},
-                                "required": ["action"],
-                            },
-                            "then": {
-                                "type": "object",
-                                "properties": {
-                                    "title": {"type": "string", "title": "Title"},
-                                    "content": {"type": "string", "title": "Content"},
-                                },
-                                "required": ["title"],
-                            },
-                        },
-                        {
-                            "if": {
-                                "type": "object",
-                                "properties": {"action": {"const": "delete"}},
-                                "required": ["action"],
-                            },
-                            "then": {
-                                "type": "object",
-                                "properties": {
-                                    "id": {"type": "string", "title": "ID"},
-                                },
-                                "required": ["id"],
-                            },
-                        },
-                    ],
-                },
-            },
-        },
-        "types": {
-            "inputs": ["application/json"],
-            "output": "application/json",
-        },
-    }
-}
-
 connect(
     pipium_api_key,
-    connections,
+    {
+        "crud": Model(
+            run_sync=lambda input: run(input),
+            name="CRUD",
+            widget_config=WidgetConfig(
+                form=FormWidgetConfig(
+                    schema={
+                        "type": "object",
+                        "properties": {
+                            "action": {
+                                "title": "Action",
+                                "type": "string",
+                                "enum": ["add", "delete"],
+                            },
+                        },
+                        "allOf": [
+                            {
+                                "if": {
+                                    "type": "object",
+                                    "properties": {"action": {"const": "add"}},
+                                    "required": ["action"],
+                                },
+                                "then": {
+                                    "type": "object",
+                                    "properties": {
+                                        "title": {"type": "string", "title": "Title"},
+                                        "content": {
+                                            "type": "string",
+                                            "title": "Content",
+                                        },
+                                    },
+                                    "required": ["title"],
+                                },
+                            },
+                            {
+                                "if": {
+                                    "type": "object",
+                                    "properties": {"action": {"const": "delete"}},
+                                    "required": ["action"],
+                                },
+                                "then": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": {"type": "string", "title": "ID"},
+                                    },
+                                    "required": ["id"],
+                                },
+                            },
+                        ],
+                    },
+                ),
+            ),
+            types=Types(
+                inputs=["application/json"],
+                output="application/json",
+            ),
+        )
+    },
 )

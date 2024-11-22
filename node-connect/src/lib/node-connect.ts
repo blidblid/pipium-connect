@@ -1,7 +1,7 @@
 import {
   ConnectAdapter,
   ConnectSocketOptions,
-  Connection,
+  Model,
   SioSocket,
   connect as _connect,
 } from '@pipium/connect';
@@ -9,11 +9,11 @@ import chalk from 'chalk';
 
 export function connect(
   api_key: string,
-  connections: Record<string, Connection>,
+  models: Record<string, Model>,
   options: ConnectSocketOptions = {},
 ) {
   const adapter = new ConnectNodeAdapter(api_key);
-  return _connect(adapter, new SioSocket(adapter, options), connections);
+  return _connect(adapter, new SioSocket(adapter, options), models);
 }
 
 export class ConnectNodeAdapter implements ConnectAdapter {

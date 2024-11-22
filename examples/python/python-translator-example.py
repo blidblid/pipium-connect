@@ -1,7 +1,7 @@
 import os
 import base64
 import requests
-from pipium_connect import connect
+from pipium_connect import connect, Model, Types, ConnectOptions, Input
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -10,12 +10,12 @@ google_api_key = os.getenv("GOOGLE_API_KEY")
 pipium_api_key = os.getenv("PIPIUM_API_KEY")
 
 
-def google_translate(input):
+def google_translate(input: Input):
     endpoint = "https://translation.googleapis.com/language/translate/v2"
     params = {
-        "q": input["text"],
+        "q": input.text,
         "format": "text",
-        "target": input["config"]["target"],
+        "target": input.config["target"],
         "key": google_api_key,
     }
 
@@ -28,15 +28,15 @@ def google_translate(input):
     return json_data["data"]["translations"][0]["translatedText"]
 
 
-def google_speech_to_text(input):
+def google_speech_to_text(input: Input):
     endpoint = "https://speech.googleapis.com/v1/speech:recognize"
     params = {"key": google_api_key}
     body = {
         "audio": {
-            "content": base64.b64encode(input["binary"]).decode("utf-8"),
+            "content": base64.b64encode(input.binary).decode("utf-8"),
         },
         "config": {
-            "language_code": input["config"]["language_code"],
+            "language_code": input.config["language_code"],
         },
     }
 
@@ -58,14 +58,14 @@ def google_speech_to_text(input):
 connect(
     os.environ["PIPIUM_API_KEY"],
     {
-        "google_translate": {
-            "name": "Google Translate",
-            "run_sync": google_translate,
-            "types": {
-                "inputs": ["text/plain"],
-                "output": "text/plain",
-            },
-            "schema": {
+        "google_translate": Model(
+            name="Google Translate",
+            run_sync=google_translate,
+            types=Types(
+                inputs=["text/plain"],
+                output="text/plain",
+            ),
+            schema={
                 "type": "object",
                 "properties": {
                     "target": {
@@ -77,15 +77,15 @@ connect(
                 },
                 "required": ["target"],
             },
-        },
-        "google_speech_to_text": {
-            "name": "Google Speech to Text",
-            "run_sync": google_speech_to_text,
-            "types": {
-                "inputs": ["audio/wav", "audio/webm"],
-                "output": "text/plain",
-            },
-            "schema": {
+        ),
+        "google_speech_to_text": Model(
+            name="Google Speech to Text",
+            run_sync=google_speech_to_text,
+            types=Types(
+                inputs=["audio/wav", "audio/webm"],
+                output="text/plain",
+            ),
+            schema={
                 "type": "object",
                 "properties": {
                     "language_code": {
@@ -97,6 +97,6 @@ connect(
                 },
                 "required": ["language_code"],
             },
-        },
+        ),
     },
 )
