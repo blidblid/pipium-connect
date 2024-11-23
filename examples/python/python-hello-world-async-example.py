@@ -1,6 +1,6 @@
 import os
 import asyncio
-from pipium_connect import connect, ConnectOptions, Model, Input, Observer, Types
+from pipium_connect import connect, Model, Input, Observer, Types
 from dotenv import load_dotenv
 
 load_dotenv()

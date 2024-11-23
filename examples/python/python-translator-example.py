@@ -1,7 +1,7 @@
 import os
 import base64
 import requests
-from pipium_connect import connect, Model, Types, ConnectOptions, Input
+from pipium_connect import connect, Model, Types, Input
 from dotenv import load_dotenv
 
 load_dotenv()
