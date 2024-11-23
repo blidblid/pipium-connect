@@ -1,5 +1,5 @@
 import os
-from pipium_connect import connect, Model, Types, ConnectOptions
+from pipium_connect import connect, Model, Types
 from dotenv import load_dotenv
 
 load_dotenv()

@@ -2,8 +2,12 @@ from typing import Any, Callable, Dict, List, Literal, Optional, Union
 from pipium_connect.input_model import Input
 from pipium_connect.observer_model import Observer
 from pipium_connect.output_model import Output
+from pipium_connect.rate_limit_model import RateLimit
 from pipium_connect.types_model import Types
 from pipium_connect.widget_config_model import WidgetConfig
+from pipium_connect.widgets_model import Widgets
+
+Access = Literal["private", "public", "forbidden"]
 
 
 class Model:
@@ -18,7 +22,7 @@ class Model:
     invited_user_id: Optional[List[str]]
     """Invited user IDs that are allowed to run the model."""
 
-    access: Optional[Literal["private", "public", "forbidden"]]
+    access: Optional[Access]
     """Model access control.
     - Public models are accessible by anyone.
     - Private models are only accessible by the owner and invited users.
@@ -27,8 +31,14 @@ class Model:
     schema: Optional[dict]
     """JSON schema that validates config and generates a form."""
 
+    rate_limit: Optional[RateLimit]
+    """Rate limit configuration."""
+
+    widgets: Optional[dict]
+    """UI components for inputs and outputs. If these are not specified, they are inferred the model MIME types."""
+
     widget_config: Optional[WidgetConfig]
-    """UI component configurations."""
+    """UI component configurations. If these are not specified, they are inferred the model MIME types."""
 
     run_async: Optional[Callable[[Input, Observer], None]]
     """Run function that emits values, errors and completion notifications."""
@@ -53,9 +63,11 @@ class Model:
         ] = None,
         run_async: Optional[Callable[[Input, Observer], None]] = None,
         invited_user_id: Optional[List[str]] = None,
-        access: Optional[Literal["private", "public", "forbidden"]] = None,
+        access: Optional[Access] = None,
         schema: Optional[dict] = None,
         description: Optional[str] = None,
+        rate_limit: Optional[RateLimit] = None,
+        widgets: Optional[Widgets] = None,
         widget_config: Optional[WidgetConfig] = None,
     ):
         """Initialize a Model object.
@@ -69,7 +81,10 @@ class Model:
             access: Model access control. Public models are accessible by anyone. Private models are only accessible by the owner and invited users. Forbidden models are not accessible by anyone.
             schema: JSON schema that validates config and generates a form.
             description: Model description.
-            widget_config: UI component configurations."""
+            rate_limit: Rate limit configuration.
+            widgets: UI components for inputs and outputs. If these are not specified, they are inferred the model MIME types.
+            widget_config: UI component configurations. If these are not specified, they are inferred the model MIME types.
+        """
 
         self.name = name
         self.types = types
@@ -77,7 +92,9 @@ class Model:
         self.access = access
         self.schema = schema
         self.description = description
+        self.rate_limit = rate_limit
         self.widget_config = widget_config
+        self.widgets = widgets
         self.run_sync = run_sync
         self.run_async = run_async
 
@@ -89,6 +106,8 @@ class Model:
             "access": self.access,
             "schema": self.schema,
             "description": self.description,
+            "rate_limit": self.rate_limit.asdict() if self.rate_limit else None,
+            "widgets": self.widgets.asdict() if self.widgets else None,
             "widget_config": (
                 self.widget_config.asdict() if self.widget_config else None
             ),

@@ -1,6 +1,5 @@
 from pipium_connect import (
     connect,
-    ConnectOptions,
     FormWidgetConfig,
     Input,
     Model,
