@@ -34,11 +34,11 @@ class Model:
     rate_limit: Optional[RateLimit]
     """Rate limit configuration."""
 
-    widgets: Optional[dict]
+    widgets: Optional[Widgets]
     """UI components for inputs and outputs. If these are not specified, they are inferred the model MIME types."""
 
     widget_config: Optional[WidgetConfig]
-    """UI component configurations. If these are not specified, they are inferred the model MIME types."""
+    """UI component configurations."""
 
     run_async: Optional[Callable[[Input, Observer], None]]
     """Run function that emits values, errors and completion notifications."""
@@ -83,7 +83,7 @@ class Model:
             description: Model description.
             rate_limit: Rate limit configuration.
             widgets: UI components for inputs and outputs. If these are not specified, they are inferred the model MIME types.
-            widget_config: UI component configurations. If these are not specified, they are inferred the model MIME types.
+            widget_config: UI component configurations.
         """
 
         self.name = name

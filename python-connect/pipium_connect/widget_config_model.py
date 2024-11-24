@@ -41,7 +41,10 @@ class WidgetConfig:
     """UI component configurations."""
 
     audio: Optional[AudioWidgetConfig]
+    """Audio widget configuration."""
+
     form: Optional[FormWidgetConfig]
+    """Form widget configuration."""
 
     def __init__(
         self,
