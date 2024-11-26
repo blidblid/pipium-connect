@@ -211,7 +211,7 @@ def connection_input_to_input(
 
 
 def get_server_url(options: ConnectOptions):
-    if hasattr(options, "server_url"):
+    if options.server_url:
         return options.server_url
 
     return "https://server-production-00001-pq8-vauf4uyfmq-ey.a.run.app"
