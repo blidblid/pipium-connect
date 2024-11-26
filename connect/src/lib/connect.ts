@@ -36,6 +36,7 @@ export async function connect(
   socket.on('pp-run', async (connection_input: ConnectionInput) => {
     const input: Input = {
       ...connection_input,
+      config: connection_input.config ?? {},
       text: try_string_decode(connection_input.binary),
       previous_values: connection_input.previous_values.map(
         connection_previous_value_to_run_previous_value,

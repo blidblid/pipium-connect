@@ -19,7 +19,7 @@ class Model:
     types: Types
     """Input and output MIME types."""
 
-    invited_user_id: Optional[List[str]]
+    invited_user_ids: Optional[List[str]]
     """Invited user IDs that are allowed to run the model."""
 
     access: Optional[Access]
@@ -35,7 +35,7 @@ class Model:
     """Rate limit configuration."""
 
     widgets: Optional[Widgets]
-    """UI components for inputs and outputs. If these are not specified, they are inferred the model MIME types."""
+    """UI components for inputs and outputs. If unspecified, they are inferred the model MIME types."""
 
     widget_config: Optional[WidgetConfig]
     """UI component configurations."""
@@ -62,7 +62,7 @@ class Model:
             ]
         ] = None,
         run_async: Optional[Callable[[Input, Observer], None]] = None,
-        invited_user_id: Optional[List[str]] = None,
+        invited_user_ids: Optional[List[str]] = None,
         access: Optional[Access] = None,
         schema: Optional[dict] = None,
         description: Optional[str] = None,
@@ -77,18 +77,18 @@ class Model:
             types: Input and output MIME types.
             run_sync: Run function that returns one or more values.
             run_async: Run function that emits values, errors and completion notifications.
-            invited_user_id: Invited user IDs that are allowed to run the model.
+            invited_user_ids: Invited user IDs that are allowed to run the model.
             access: Model access control. Public models are accessible by anyone. Private models are only accessible by the owner and invited users. Forbidden models are not accessible by anyone.
             schema: JSON schema that validates config and generates a form.
             description: Model description.
             rate_limit: Rate limit configuration.
-            widgets: UI components for inputs and outputs. If these are not specified, they are inferred the model MIME types.
+            widgets: UI components for inputs and outputs. If unspecified, they are inferred the model MIME types.
             widget_config: UI component configurations.
         """
 
         self.name = name
         self.types = types
-        self.invited_user_id = invited_user_id
+        self.invited_user_ids = invited_user_ids
         self.access = access
         self.schema = schema
         self.description = description
@@ -102,7 +102,7 @@ class Model:
         return {
             "name": self.name,
             "types": self.types.asdict() if self.types else None,
-            "invited_user_id": self.invited_user_id,
+            "invited_user_ids": self.invited_user_ids,
             "access": self.access,
             "schema": self.schema,
             "description": self.description,

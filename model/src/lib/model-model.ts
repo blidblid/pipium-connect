@@ -1,6 +1,6 @@
 import z from 'zod';
 import { MODEL_ID_SCHEMA, USER_ID_SCHEMA } from './common-model';
-import { MIME_TYPE_SCHEMA } from './mime-model';
+import { MIME_TYPE_SCHEMA } from './mime-type-model';
 import {
   WIDGET_CONFIG_AUDIO_AUTOPLAY_SCHEMA,
   WIDGET_CONFIG_AUDIO_SCHEMA,

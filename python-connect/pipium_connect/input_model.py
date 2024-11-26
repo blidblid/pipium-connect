@@ -36,7 +36,7 @@ class Input:
     """Layer ID."""
 
     config: dict
-    """Input configuration."""
+    """Input configuration from the model JSON Schema."""
 
     previous_values: List[PreviousValue]
     """Previous values."""
@@ -68,7 +68,7 @@ class Input:
             model_id: Model ID.
             result_id: Result ID.
             layer_id: Layer ID.
-            config: Input configuration.
+            config: Input configuration from the model JSON Schema.
             text: Input value as text.
             previous_values: Previous values for this result_id."""
 

@@ -1,18 +1,26 @@
-import { ConnectionPreviousValue } from '@pipium/model';
+/** A previous value for the current run. */
+export interface PreviousValue {
+  /** URI of the previous value used to download it. */
+  uri: string;
 
-export interface PreviousValue extends ConnectionPreviousValue {
+  /** Description of the previous value. */
+  description: string;
+
+  /** Date the previous value was created. */
+  date: Date;
+
   /**
-   * Get the text value of the previous value.
+   * Gets the text value of the previous value.
    */
   text(): Promise<string>;
 
   /**
-   * Get the JSON value of the previous value.
+   * Gets the JSON value of the previous value.
    */
   json(): Promise<unknown>;
 
   /**
-   * Get the binary value of the previous value.
+   * Gets the binary value of the previous value.
    */
   binary(): Promise<ArrayBuffer>;
 }
