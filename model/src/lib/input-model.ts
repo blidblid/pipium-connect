@@ -4,8 +4,8 @@ import {
   PIPE_ID_SCHEMA,
   USER_ID_SCHEMA,
 } from './common-model';
+import { MIME_TYPE_SCHEMA } from './mime-type-model';
 import { INPUT_WIDGET_ID_SCHEMA } from './widget-model';
-import { MIME_TYPE_SCHEMA } from './mime-model';
 
 export const INPUT_VALUE_SCHEMA = z
   .object({

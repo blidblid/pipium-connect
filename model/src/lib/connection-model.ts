@@ -120,9 +120,7 @@ export const CONNECTION_PREVIOUS_VALUE_SCHEMA = z.object({
 
 export const CONNECTION_INPUT_SCHEMA = z.object({
   id: RUN_ID_SCHEMA,
-  binary: z
-    .union([z.instanceof(ArrayBuffer), z.instanceof(Uint8Array)])
-    .describe('Binary of the input data.'),
+  binary: z.instanceof(ArrayBuffer).describe('Binary of the input data.'),
   mime_type: z.string().describe('MIME type of the input data.'),
   user_id: USER_ID_SCHEMA,
   local_model_id: LOCAL_MODEL_ID_SCHEMA,

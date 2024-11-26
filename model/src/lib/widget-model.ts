@@ -57,7 +57,7 @@ export const WIDGETS_SCHEMA = z
     outputs: z.array(OUTPUT_WIDGET_ID_SCHEMA).describe('Output UI components.'),
   })
   .describe(
-    'UI components for inputs and outputs. If these are not specified, they are inferred the model MIME types.',
+    'UI components for inputs and outputs. If unspecified, they are inferred the model MIME types.',
   );
 
 export type OutputWidgetId = z.infer<typeof OUTPUT_WIDGET_ID_SCHEMA>;

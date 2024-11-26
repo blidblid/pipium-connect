@@ -6,22 +6,22 @@ class PreviousValue:
     """A previous value for the current run."""
 
     uri: str
-    """URI of the previous value to download it."""
+    """URI of the previous value used to download it."""
 
     description: str
     """Description of the previous value."""
 
     date: datetime
-    """Date of the previous value."""
+    """Date the previous value was created."""
 
     binary: Callable[[bytes], None]
-    """Function to download the previous value as binary."""
+    """Gets the binary value of the previous value."""
 
     json: Callable[[str], None]
-    """Function to download the previous value as JSON."""
+    """Gets the JSON value of the previous value."""
 
     text: Callable[[str], None]
-    """Function to download the previous value as text."""
+    """Gets the text value of the previous value."""
 
     def __init__(
         self,
@@ -37,10 +37,10 @@ class PreviousValue:
         Args:
             uri: URI of the previous value.
             description: Description of the previous value.
-            date: Date of the previous value.
-            binary: Function to download the previous value as binary.
-            json: Function to download the previous value as JSON.
-            text: Function to download the previous value as text."""
+            date: Date the previous value was created.
+            binary: Gets the binary value of the previous value.
+            json: Gets the JSON value of the previous value.
+            text: Gets the text value of the previous value."""
 
         self.uri = uri
         self.description = description

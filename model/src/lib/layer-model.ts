@@ -4,7 +4,7 @@ import {
   PIPE_ID_SCHEMA,
   USER_ID_SCHEMA,
 } from './common-model';
-import { MimeType } from './mime-model';
+import { MimeType } from './mime-type-model';
 import { MODEL_SCHEMA } from './model-model';
 
 export const LAYER_OPERATOR_SCHEMA = z

@@ -4,7 +4,7 @@ export * from './entity-model';
 export * from './file-model';
 export * from './input-model';
 export * from './layer-model';
-export * from './mime-model';
+export * from './mime-type-model';
 export * from './model-model';
 export * from './pipe-model';
 export * from './result-model';
