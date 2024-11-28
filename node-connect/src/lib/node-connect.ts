@@ -7,6 +7,14 @@ import {
 } from '@pipium/connect';
 import chalk from 'chalk';
 
+/**
+ * Connect models to Pipium.
+ *
+ * @param api_key API key for the user the models will be added to. Create one in the [Pipium settings](https://pipium.com/settings).
+ * @param models A record of `Model` objects, indexed by their ID.
+ * @param options Socket options for the connection.
+ * @returns
+ */
 export function connect(
   api_key: string,
   models: Record<string, Model>,

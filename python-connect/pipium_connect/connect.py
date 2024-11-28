@@ -21,6 +21,13 @@ def connect(
     models: Models,
     options: ConnectOptions = ConnectOptions(),
 ):
+    """Connect to models Pipium.
+
+    Args:
+        api_key (str): API key for the user the models will be added to. Create one in the [Pipium settings](https://pipium.com/settings).
+        models (Models): A dictionary of `Model` objects, indexed by their ID.
+    """
+
     server_url = get_server_url(options)
 
     log(f"Connecting to Pipium")

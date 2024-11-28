@@ -15,10 +15,13 @@ const ATTRIBUTES = {
       endLayerId: z.string().describe('ID of the layer to end repeating at.'),
       count: z.coerce
         .number()
-        .positive()
+        .min(1)
+        .max(10)
         .describe('Number of times to repeat the layers.'),
     })
-    .describe('Repetition of Pipe layers.'),
+    .describe(
+      'Repetition of Pipe layers. Inside the repetition, the output of the last layer will be the input of the first layer.',
+    ),
 };
 
 export const PIPE_INPUTTER_SCHEMA = z
