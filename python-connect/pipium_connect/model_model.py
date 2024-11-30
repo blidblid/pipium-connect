@@ -7,7 +7,7 @@ from pipium_connect.types_model import Types
 from pipium_connect.widget_config_model import WidgetConfig
 from pipium_connect.widgets_model import Widgets
 
-Access = Literal["private", "public", "forbidden"]
+Access = Literal["private", "public"]
 
 
 class Model:
@@ -25,8 +25,7 @@ class Model:
     access: Optional[Access]
     """Model access control.
     - Public models are accessible by anyone.
-    - Private models are only accessible by the owner and invited users.
-    - Forbidden models are not accessible by anyone."""
+    - Private models are only accessible by the owner and invited users."""
 
     schema: Optional[dict]
     """JSON schema that validates config and generates a form."""
@@ -78,7 +77,7 @@ class Model:
             run_sync: Run function that returns one or more values.
             run_async: Run function that emits values, errors and completion notifications.
             invited_user_ids: Invited user IDs that are allowed to run the model.
-            access: Model access control. Public models are accessible by anyone. Private models are only accessible by the owner and invited users. Forbidden models are not accessible by anyone.
+            access: Model access control. Public models are accessible by anyone. Private models are only accessible by the owner and invited users.
             schema: JSON schema that validates config and generates a form.
             description: Model description.
             rate_limit: Rate limit configuration.
