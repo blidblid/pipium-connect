@@ -114,7 +114,6 @@ const connections: Record<string, Connection> = {
         return 'Inaudible or no speech detected.';
       }
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       return json.results.reduce((acc: string, result: any) => {
         const transcript = result.alternatives[0].transcript;
 

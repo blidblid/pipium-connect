@@ -6,7 +6,7 @@ import { Types } from './types-model';
 import { WidgetConfig } from './widget-config-model';
 import { Widgets } from './widgets-model';
 
-export type Access = 'public' | 'private' | 'forbidden';
+export type Access = 'public' | 'private';
 
 /**
  * A Pipium model, containing run functions and any configuration.
@@ -41,7 +41,7 @@ export interface Model<T = any> {
   /** Invited user IDs that are allowed to run the model. */
   invited_user_ids?: string[];
 
-  /** Model access control. Public models are accessible by anyone. Private models are only accessible by the owner and invited users. Forbidden models are not accessible by anyone. */
+  /** Model access control. Public models are accessible by anyone. Private models are only accessible by the owner and invited users. */
   access?: Access;
 
   /** JSON schema that validates config and generates a form. */

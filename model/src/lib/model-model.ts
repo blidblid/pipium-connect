@@ -12,9 +12,9 @@ import {
 } from './widget-model';
 
 export const MODEL_ACCESS_SCHEMA = z
-  .enum(['public', 'private', 'forbidden'])
+  .enum(['public', 'private'])
   .describe(
-    'Model access control. Public models are accessible by anyone. Private models are only accessible by the owner and invited users. Forbidden models are not accessible by anyone.',
+    'Model access control. Public models are accessible by anyone. Private models are only accessible by the owner and invited users.',
   );
 
 export const MODEL_SOURCE_SCHEMA = z.enum(['browser', 'user']);
