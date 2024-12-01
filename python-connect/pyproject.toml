@@ -1,6 +1,6 @@
 [project]
 name = "pipium_connect"
-version = "0.0.4" # Also change in setup.py
+version = "0.0.5" # Also change in setup.py
 authors = [
   { name="Albin Berglund", email="e.a.e.berglund@gmail.com" },
 ]
