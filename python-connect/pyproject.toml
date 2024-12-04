@@ -1,6 +1,6 @@
 [project]
 name = "pipium_connect"
-version = "0.0.5" # Also change in setup.py
+version = "0.0.6" # Also change in setup.py
 authors = [
   { name="Albin Berglund", email="e.a.e.berglund@gmail.com" },
 ]
@@ -8,6 +8,6 @@ description = "Pipium Python client that connects your code to the Pipium platfo
 readme = "README.md"
 requires-python = ">=3.7"
 dependencies = [
-  "python-socketio[client]",
-  "requests"
+  "python-socketio[client]==5.11.4",
+  "requests==2.32.3"
 ]

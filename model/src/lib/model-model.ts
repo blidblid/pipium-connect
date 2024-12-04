@@ -84,6 +84,7 @@ export const MODEL_BODY_SCHEMA = z.object({
 export const MODEL_SCHEMA = MODEL_BODY_SCHEMA.extend({
   id: MODEL_ID_SCHEMA,
   date: z.date().describe('Creation date.'),
+  offline: z.boolean().optional().describe('Whether the model is offline.'),
 }).required({
   access: true,
   invitedUserIds: true,
